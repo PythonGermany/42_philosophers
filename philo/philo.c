@@ -66,6 +66,7 @@ int	main(int argc, char **argv)
 {
 	t_data	*data;
 	int		i;
+	int		eat_limit;
 
 	if (argc < 5 || argc > 6 || check_int(argv + 1))
 	{
@@ -80,23 +81,27 @@ int	main(int argc, char **argv)
 		while (i < data->philo_count)
 		{
 			pthread_create(&data->philos[i], NULL, &philo_routine, (void *)data->philo_data[i]);
-			usleep(100);
 			i += 2;
 		}
 		i = 1;
 		while (i < data->philo_count)
 		{
 			pthread_create(&data->philos[i], NULL, &philo_routine, (void *)data->philo_data[i]);
-			usleep(100);
 			i += 2;
 		}
 		while (data->running)
 		{
 			i = 0;
+			eat_limit = 0;
 			while (i < data->philo_count)
-				if (!*(data->philo_data[i++]->is_alive))
+			{
+				eat_limit += *data->philo_data[i]->is_alive;
+				if (!*data->philo_data[i++]->is_alive)
 					break ;
-			if (!*(data->philo_data[i - 1]->is_alive))
+			}
+			if (eat_limit == -data->philo_count)
+				break ;
+			if (!*data->philo_data[i - 1]->is_alive)
 			{
 				print_message(data->philo_data[i - 1], "died");
 				data->running = 0;

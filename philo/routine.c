@@ -33,27 +33,32 @@ void	print_message(t_philo *data, char *msg)
 	pthread_mutex_unlock(data->output);
 }
 
+int	check_vitals(t_philo *data)
+{
+	if (get_time_diff(data->last_meal) * 1000 > data->tt_die)
+	{
+		*data->is_alive = 0;
+		return (1);
+	}
+	return (0);
+}
+
 void	take_fork(t_philo *data)
 {
 	struct timeval	now;
 
 	while (data->philo_count < 2 || data->forks[data->id - 1] \
 	|| data->forks[data->id % data->philo_count])
-	{
-		if (get_time_diff(data->last_meal) * 1000 > data->tt_die)
-		{
-			*data->is_alive = 0;
+		if (check_vitals(data))
 			return ;
-		}
-	}
 	pthread_mutex_lock(&data->forks_mutex[data->id - 1]);
 	pthread_mutex_lock(&data->forks_mutex[data->id % data->philo_count]);
 	data->forks[data->id - 1] = 1;
 	data->forks[data->id % data->philo_count] = 1;
-	print_message(data, "has taken a fork");
-	print_message(data, "has taken a fork");
 	gettimeofday(&now, NULL);
 	data->last_meal = now;
+	print_message(data, "has taken a fork");
+	print_message(data, "has taken a fork");
 }
 
 void	return_fork(t_philo *data)
@@ -88,5 +93,7 @@ void	*philo_routine(void *arg)
 		else
 			break ;
 	}
+	if (data->max_eat && data->times_eaten >= data->max_eat)
+		*data->is_alive = -1;
 	return (NULL);
 }
