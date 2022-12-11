@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <pthread.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include "philo.h"
 
@@ -75,9 +76,20 @@ int	main(int argc, char **argv)
 	else
 	{
 		data = init_data(argv + 1);
-		i = -1;
-		while (++i < data->philo_count)
+		i = 0;
+		while (i < data->philo_count)
+		{
 			pthread_create(&data->philos[i], NULL, &philo_routine, (void *)data->philo_data[i]);
+			usleep(100);
+			i += 2;
+		}
+		i = 1;
+		while (i < data->philo_count)
+		{
+			pthread_create(&data->philos[i], NULL, &philo_routine, (void *)data->philo_data[i]);
+			usleep(100);
+			i += 2;
+		}
 		while (data->running)
 		{
 			i = 0;
@@ -88,11 +100,15 @@ int	main(int argc, char **argv)
 			{
 				print_message(data->philo_data[i - 1], "died");
 				data->running = 0;
+				pthread_mutex_lock(&data->output);
 			}
+			usleep(10);
 		}
 		i = -1;
 		while (++i < data->philo_count)
-			pthread_join(data->philos[i], NULL);
+			pthread_detach(data->philos[i]);
+		pthread_mutex_unlock(&data->output);
 		terminate_data(data);
 	}
+	return (0);
 }

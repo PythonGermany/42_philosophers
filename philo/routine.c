@@ -42,7 +42,7 @@ void	take_fork(t_philo *data)
 	while (data->philo_count < 2 || data->forks[data->id - 1] \
 	|| data->forks[data->id % data->philo_count])
 	{
-		if (get_time_diff(data->last_meal) * 1000 >= data->tt_die)
+		if (get_time_diff(data->last_meal) * 1000 > data->tt_die)
 		{
 			*data->is_alive = 0;
 			return ;
@@ -75,7 +75,7 @@ void	*philo_routine(void *arg)
 	while (1)
 	{
 		take_fork(data);
-		if (*data->is_alive && *data->running)
+		if (*data->is_alive)
 		{
 			print_message(data, "is eating");
 			usleep(data->tt_eat);

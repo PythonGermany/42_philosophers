@@ -6,13 +6,13 @@
 #    By: rburgsta <rburgsta@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/25 15:38:03 by rburgsta          #+#    #+#              #
-#    Updated: 2022/12/10 02:18:04 by rburgsta         ###   ########.fr        #
+#    Updated: 2022/12/10 15:13:28 by rburgsta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -pthread
 LK_SAN = #-Wno-gnu-include-next -I/LeakSanitizer/include -L../LeakSanitizer/ -llsan -lc++
 
 SRC = philo.c init.c routine.c
