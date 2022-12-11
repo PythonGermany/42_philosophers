@@ -27,12 +27,10 @@ int	get_time_diff(struct timeval start)
 
 void	print_message(t_philo *data, char *msg)
 {
+	pthread_mutex_lock(data->output);
 	if (*data->running)
-	{
-		pthread_mutex_lock(data->output);
 		printf("%d %d %s\n", get_time_diff(*data->time), data->id, msg);
-		pthread_mutex_unlock(data->output);
-	}
+	pthread_mutex_unlock(data->output);
 }
 
 void	take_fork(t_philo *data)

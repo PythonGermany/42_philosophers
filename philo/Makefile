@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rburgsta <rburgsta@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/25 15:38:03 by rburgsta          #+#    #+#              #
-#    Updated: 2022/12/10 15:13:28 by rburgsta         ###   ########.fr        #
+#    Updated: 2022/12/11 13:26:52 by rburgsta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-FLAGS = -Wall -Wextra -Werror -pthread
-LK_SAN = #-Wno-gnu-include-next -I/LeakSanitizer/include -L../LeakSanitizer/ -llsan -lc++
+FLAGS = -Wall -Wextra -Werror #-pthread
+LK_SAN = -Wno-gnu-include-next -I/LeakSanitizer/include -L../../LeakSanitizer/ -llsan -lc++
 
 SRC = philo.c init.c routine.c
 OBJ = $(SRC:%.c=%.o)
