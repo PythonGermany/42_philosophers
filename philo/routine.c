@@ -35,6 +35,7 @@ void	print_message(t_philo *data, char *msg)
 
 int	check_vitals(t_philo *data)
 {
+	usleep(10);
 	if (get_time_diff(data->last_meal) * 1000 > data->tt_die)
 	{
 		*data->is_alive = 0;

@@ -105,14 +105,12 @@ int	main(int argc, char **argv)
 			{
 				print_message(data->philo_data[i - 1], "died");
 				data->running = 0;
-				pthread_mutex_lock(&data->output);
 			}
 			usleep(10);
 		}
 		i = -1;
 		while (++i < data->philo_count)
-			pthread_detach(data->philos[i]);
-		pthread_mutex_unlock(&data->output);
+			pthread_join(data->philos[i], NULL);
 		terminate_data(data);
 	}
 	return (0);
