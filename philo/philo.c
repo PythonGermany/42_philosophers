@@ -10,10 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include "philo.h"
 
 int	ft_strlen(const char *s)
@@ -31,8 +27,8 @@ int	check_int(char **str)
 	int	i;
 	int	i2;
 
-	i = 0;
-	while (str[i] != NULL)
+	i = -1;
+	while (str[++i] != NULL)
 	{
 		if ((ft_strlen(str[i]) > 10) || *str[i] == '0')
 			return (1);
@@ -41,34 +37,33 @@ int	check_int(char **str)
 			if (str[i][i2] < '0' || str[i][i2] > '9' \
 			|| (str[i][i2] > "2147483647"[i2] && ft_strlen(str[i]) > 9))
 				return (1);
-		i++;
 	}
 	return (0);
 }
 
-void	terminate_data(t_data *data)
+void	print_message(t_philo *data, char *msg)
 {
-	while (--data->philo_count >= 0)
+	pthread_mutex_lock(data->output);
+	if (*data->running)
+		printf("%d %d %s\n", get_time_diff(*data->time), data->id, msg);
+	pthread_mutex_unlock(data->output);
+}
+
+void	start_threads(t_data *data, int start)
+{
+	while (start >= 0)
 	{
-		free(data->philo_data[data->philo_count]->is_alive);
-		free(data->philo_data[data->philo_count]);
-		pthread_mutex_destroy(&data->forks_mutex[data->philo_count]);
+		pthread_create(&data->philos[start], NULL, &philo_routine, \
+		(void *)data->philo_data[start]);
+		start -= 2;
 	}
-	pthread_mutex_destroy(&data->output);
-	free(data->philos);
-	free(data->philo_data);
-	free(data->forks_mutex);
-	free(data->forks);
-	free(data);
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	*data;
-	int		i;
-	int		eat_limit;
 
-	if (argc < 5 || argc > 6 || check_int(argv + 1))
+	if (argc < 5 || argc > 6 || check_int(&argv[1]))
 	{
 		printf("Use: %s number_of_philosophers time_to_die ", argv[0]);
 		printf("time_to_eat time_to_sleep ");
@@ -77,40 +72,9 @@ int	main(int argc, char **argv)
 	else
 	{
 		data = init_data(argv + 1);
-		i = 0;
-		while (i < data->philo_count)
-		{
-			pthread_create(&data->philos[i], NULL, &philo_routine, (void *)data->philo_data[i]);
-			i += 2;
-		}
-		i = 1;
-		while (i < data->philo_count)
-		{
-			pthread_create(&data->philos[i], NULL, &philo_routine, (void *)data->philo_data[i]);
-			i += 2;
-		}
-		while (data->running)
-		{
-			i = 0;
-			eat_limit = 0;
-			while (i < data->philo_count)
-			{
-				eat_limit += *data->philo_data[i]->is_alive;
-				if (!*data->philo_data[i++]->is_alive)
-					break ;
-			}
-			if (eat_limit == -data->philo_count)
-				break ;
-			if (!*data->philo_data[i - 1]->is_alive)
-			{
-				print_message(data->philo_data[i - 1], "died");
-				data->running = 0;
-			}
-			usleep(10);
-		}
-		i = -1;
-		while (++i < data->philo_count)
-			pthread_join(data->philos[i], NULL);
+		start_threads(data, data->philo_count - 1);
+		start_threads(data, data->philo_count - 2);
+		monitor_simulation(data);
 		terminate_data(data);
 	}
 	return (0);

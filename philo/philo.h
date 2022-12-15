@@ -13,6 +13,12 @@
 #ifndef PHILO_H
 # define PHILO_H
 
+# include <stdio.h>
+# include <unistd.h>
+# include <pthread.h>
+# include <stdlib.h>
+# include <sys/time.h>
+
 typedef struct s_philo
 {
 	int				*running;
@@ -44,7 +50,13 @@ typedef struct s_data
 }	t_data;
 
 t_data	*init_data(char **arg);
+void	terminate_data(t_data *data);
+int		get_time_diff(struct timeval start);
 void	print_message(t_philo *data, char *msg);
 void	*philo_routine(void *data);
+void	monitor_simulation(t_data *data);
+int		get_time_diff(struct timeval start);
+int		check_vitals(t_philo *data);
+void	check_and_wait(t_philo *data, int time_to_wait);
 
 #endif
