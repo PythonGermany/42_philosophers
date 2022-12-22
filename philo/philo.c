@@ -41,14 +41,6 @@ int	check_int(char **str)
 	return (0);
 }
 
-void	print_message(t_philo *data, char *msg)
-{
-	pthread_mutex_lock(data->output);
-	if (*data->running)
-		printf("%d %d %s\n", get_time_diff(*data->time), data->id, msg);
-	pthread_mutex_unlock(data->output);
-}
-
 void	start_threads(t_data *data, int start)
 {
 	while (start >= 0)
