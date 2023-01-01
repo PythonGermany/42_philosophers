@@ -45,8 +45,8 @@ void	start_threads(t_data *data, int start)
 {
 	while (start >= 0)
 	{
-		pthread_create(&data->philos[start], NULL, &philo_routine, \
-		(void *)data->philo_data[start]);
+		pthread_create(data->philos + start, NULL, &philo_routine, \
+			(void *)(data->philo_data + start));
 		start -= 2;
 	}
 }

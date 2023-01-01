@@ -24,7 +24,7 @@ typedef struct s_philo
 	int				*running;
 	int				philo_count;
 	int				id;
-	int				*is_alive;
+	int				is_alive;
 	int				tt_die;
 	int				tt_eat;
 	int				tt_sleep;
@@ -42,7 +42,7 @@ typedef struct s_data
 	int				running;
 	int				philo_count;
 	pthread_t		*philos;
-	t_philo			**philo_data;
+	t_philo			*philo_data;
 	pthread_mutex_t	*forks_mutex;
 	int				*forks;
 	pthread_mutex_t	output;
@@ -52,7 +52,7 @@ typedef struct s_data
 t_data	*init_data(char **arg);
 void	terminate_data(t_data *data);
 void	monitor_simulation(t_data *data);
-void	print_message(t_philo *data, char *msg);
+void	print_message(t_philo *data, char *msg, int print);
 void	*philo_routine(void *data);
 
 #endif

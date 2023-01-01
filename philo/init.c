@@ -42,29 +42,27 @@ int	ft_atoi(const char *str)
 	return (nb * sign);
 }
 
-t_philo	*init_philo(t_data *data, char **arg, int id)
+t_philo	init_philo(t_data *data, char **arg, int id)
 {
-	t_philo	*philo;
+	t_philo	philo;
 
-	philo = (t_philo *)malloc(sizeof(t_philo));
-	philo->running = &data->running;
-	philo->philo_count = data->philo_count;
-	philo->id = id;
-	philo->is_alive = (int *)malloc(sizeof(int));
-	philo->is_alive[0] = 1;
-	philo->tt_die = ft_atoi(arg[1]);
-	philo->tt_eat = ft_atoi(arg[2]);
-	philo->tt_sleep = ft_atoi(arg[3]);
-	philo->forks_mutex = data->forks_mutex;
-	philo->forks = data->forks;
+	philo.running = &data->running;
+	philo.philo_count = data->philo_count;
+	philo.id = id;
+	philo.is_alive = 1;
+	philo.tt_die = ft_atoi(arg[1]);
+	philo.tt_eat = ft_atoi(arg[2]);
+	philo.tt_sleep = ft_atoi(arg[3]);
+	philo.forks_mutex = data->forks_mutex;
+	philo.forks = data->forks;
 	if (arg[4] != NULL)
-		philo->max_eat = ft_atoi(arg[4]);
+		philo.max_eat = ft_atoi(arg[4]);
 	else
-		philo->max_eat = 0;
-	philo->times_eaten = 0;
-	philo->output = &data->output;
-	philo->time = &data->time;
-	philo->last_meal = data->time;
+		philo.max_eat = 0;
+	philo.times_eaten = 0;
+	philo.output = &data->output;
+	philo.time = &data->time;
+	philo.last_meal = data->time;
 	return (philo);
 }
 
@@ -77,7 +75,7 @@ t_data	*init_data(char **arg)
 	data->running = 1;
 	data->philo_count = ft_atoi(arg[0]);
 	data->philos = (pthread_t *)malloc(ft_atoi(arg[0]) * sizeof(pthread_t));
-	data->philo_data = (t_philo **)malloc(ft_atoi(arg[0]) * sizeof(t_philo *));
+	data->philo_data = (t_philo *)malloc(ft_atoi(arg[0]) * sizeof(t_philo));
 	data->forks_mutex = \
 	(pthread_mutex_t *)malloc(ft_atoi(arg[0]) * sizeof(pthread_mutex_t));
 	data->forks = (int *)malloc(ft_atoi(arg[0]) * sizeof(int));
@@ -96,11 +94,7 @@ t_data	*init_data(char **arg)
 void	terminate_data(t_data *data)
 {
 	while (--data->philo_count >= 0)
-	{
-		free(data->philo_data[data->philo_count]->is_alive);
-		free(data->philo_data[data->philo_count]);
 		pthread_mutex_destroy(&data->forks_mutex[data->philo_count]);
-	}
 	pthread_mutex_destroy(&data->output);
 	free(data->philos);
 	free(data->philo_data);
