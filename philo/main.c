@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-int	ft_strlen(const char *s)
+static int	ft_strlen(const char *s)
 {
 	int	len;
 
@@ -22,7 +22,7 @@ int	ft_strlen(const char *s)
 	return (len);
 }
 
-int	check_int(char **str)
+static int	check_int(char **str)
 {
 	int	i;
 	int	i2;
@@ -41,7 +41,7 @@ int	check_int(char **str)
 	return (0);
 }
 
-void	start_threads(t_data *data, int start)
+static void	start_threads(t_data *data, int start)
 {
 	while (start >= 0)
 	{
@@ -65,6 +65,7 @@ int	main(int argc, char **argv)
 	{
 		data = init_data(argv + 1);
 		start_threads(data, data->philo_count - 1);
+		//usleep(10);
 		start_threads(data, data->philo_count - 2);
 		monitor_simulation(data);
 		terminate_data(data);

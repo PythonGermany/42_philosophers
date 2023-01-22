@@ -18,6 +18,7 @@
 # include <pthread.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <string.h>
 
 typedef struct s_philo
 {
@@ -28,8 +29,7 @@ typedef struct s_philo
 	int				tt_die;
 	int				tt_eat;
 	int				tt_sleep;
-	pthread_mutex_t	*forks_mutex;
-	int				*forks;
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	*output;
 	int				max_eat;
 	int				times_eaten;
@@ -43,8 +43,7 @@ typedef struct s_data
 	int				philo_count;
 	pthread_t		*philos;
 	t_philo			*philo_data;
-	pthread_mutex_t	*forks_mutex;
-	int				*forks;
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	output;
 	struct timeval	time;
 }	t_data;
@@ -54,5 +53,6 @@ void	terminate_data(t_data *data);
 void	monitor_simulation(t_data *data);
 void	print_message(t_philo *data, char *msg, int print);
 void	*philo_routine(void *data);
+int	get_time_diff(struct timeval *start);
 
 #endif

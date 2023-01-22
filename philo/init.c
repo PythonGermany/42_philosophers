@@ -10,10 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
 #include "philo.h"
 
-int	ft_atoi(const char *str)
+static int	ft_atoi(const char *str)
 {
 	int			i;
 	int			sign;
@@ -42,7 +41,7 @@ int	ft_atoi(const char *str)
 	return (nb * sign);
 }
 
-t_philo	init_philo(t_data *data, char **arg, int id)
+static t_philo	init_philo(t_data *data, char **arg, int id)
 {
 	t_philo	philo;
 
@@ -53,7 +52,6 @@ t_philo	init_philo(t_data *data, char **arg, int id)
 	philo.tt_die = ft_atoi(arg[1]);
 	philo.tt_eat = ft_atoi(arg[2]);
 	philo.tt_sleep = ft_atoi(arg[3]);
-	philo.forks_mutex = data->forks_mutex;
 	philo.forks = data->forks;
 	if (arg[4] != NULL)
 		philo.max_eat = ft_atoi(arg[4]);
@@ -76,13 +74,11 @@ t_data	*init_data(char **arg)
 	data->philo_count = ft_atoi(arg[0]);
 	data->philos = (pthread_t *)malloc(ft_atoi(arg[0]) * sizeof(pthread_t));
 	data->philo_data = (t_philo *)malloc(ft_atoi(arg[0]) * sizeof(t_philo));
-	data->forks_mutex = \
+	data->forks = \
 	(pthread_mutex_t *)malloc(ft_atoi(arg[0]) * sizeof(pthread_mutex_t));
-	data->forks = (int *)malloc(ft_atoi(arg[0]) * sizeof(int));
-	memset((void *)data->forks, 0, ft_atoi(arg[0]) * sizeof(int));
 	i = -1;
 	while (++i < data->philo_count)
-		pthread_mutex_init(&data->forks_mutex[i], NULL);
+		pthread_mutex_init(&data->forks[i], NULL);
 	pthread_mutex_init(&data->output, NULL);
 	i = -1;
 	gettimeofday(&data->time, NULL);
@@ -94,11 +90,10 @@ t_data	*init_data(char **arg)
 void	terminate_data(t_data *data)
 {
 	while (--data->philo_count >= 0)
-		pthread_mutex_destroy(&data->forks_mutex[data->philo_count]);
+		pthread_mutex_destroy(&data->forks[data->philo_count]);
 	pthread_mutex_destroy(&data->output);
 	free(data->philos);
 	free(data->philo_data);
-	free(data->forks_mutex);
 	free(data->forks);
 	free(data);
 }

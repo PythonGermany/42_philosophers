@@ -3,35 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rburgsta <rburgsta@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 11:00:57 by rburgsta          #+#    #+#             */
-/*   Updated: 2022/12/27 11:29:18 by rburgsta         ###   ########.fr       */
+/*   Updated: 2023/01/22 15:06:25 by rburgsta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	get_time_diff(struct timeval start)
+int	get_time_diff(struct timeval *start)
 {
 	struct timeval	now;
 
 	gettimeofday(&now, NULL);
-	return ((now.tv_sec - start.tv_sec) * 1000 + \
-	((double)now.tv_usec - start.tv_usec) / 1000);
+	return ((now.tv_sec - start->tv_sec) * 1000 + \
+	((double)now.tv_usec - start->tv_usec) / 1000);
 }
 
-void	print_message(t_philo *data, char *msg, int print)
+static int	check_vitals(t_philo *data)
 {
-	pthread_mutex_lock(data->output);
-	if (*data->running || print)
-		printf("%d %d %s\n", get_time_diff(*data->time), data->id, msg);
-	pthread_mutex_unlock(data->output);
-}
-
-int	check_vitals(t_philo *data)
-{
-	if (get_time_diff(data->last_meal) > data->tt_die)
+	if (get_time_diff(&data->last_meal) > data->tt_die)
 		data->is_alive = 0;
 	return (data->is_alive);
 }
@@ -43,15 +35,15 @@ void	monitor_simulation(t_data *data)
 
 	while (data->running)
 	{
-		i = 0;
+		i = -1;
 		eat_limit = 0;
-		while (i < data->philo_count)
+		while (++i < data->philo_count)
 		{
 			eat_limit += data->philo_data[i].is_alive;
-			if (!check_vitals(&data->philo_data[i++]))
+			if (check_vitals(&data->philo_data[i]) == 0)
 				break ;
 		}
-		if (!data->philo_data[i - 1].is_alive)
+		if (data->philo_data[i - 1].is_alive == 0)
 		{
 			data->running = 0;
 			print_message(&data->philo_data[i - 1], "died", 1);
@@ -62,4 +54,12 @@ void	monitor_simulation(t_data *data)
 	i = -1;
 	while (++i < data->philo_count)
 		pthread_join(data->philos[i], NULL);
+}
+
+void	print_message(t_philo *data, char *msg, int print)
+{
+	pthread_mutex_lock(data->output);
+	if (*data->running || print)
+		printf("%d %d %s\n", get_time_diff(data->time), data->id, msg);
+	pthread_mutex_unlock(data->output);
 }
