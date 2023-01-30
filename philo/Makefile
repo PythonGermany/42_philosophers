@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+         #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/25 15:38:03 by rburgsta          #+#    #+#              #
-#    Updated: 2023/01/22 14:46:20 by rburgsta         ###   ########.fr        #
+#    Updated: 2023/01/30 18:56:29 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,11 @@ $(NAME) : $(OBJ)
 
 %.o : %.c
 	cc -c $(FLAGS) $^
+
+b : $(NAME) clean
+	clear
+
+val : bin
 
 clean :
 	rm -rf $(OBJ)

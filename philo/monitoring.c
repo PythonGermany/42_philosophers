@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 11:00:57 by rburgsta          #+#    #+#             */
-/*   Updated: 2023/01/22 15:06:25 by rburgsta         ###   ########.fr       */
+/*   Updated: 2023/01/30 19:09:58 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,13 @@ int	get_time_diff(struct timeval *start)
 static int	check_vitals(t_philo *data)
 {
 	if (get_time_diff(&data->last_meal) > data->tt_die)
-		data->is_alive = 0;
-	return (data->is_alive);
+	{
+		*data->running = 0;
+		data->is_done = 0;
+		print_message(data, "died", 1);
+		return (0);
+	}
+	return (1);
 }
 
 void	monitor_simulation(t_data *data)
@@ -39,16 +44,11 @@ void	monitor_simulation(t_data *data)
 		eat_limit = 0;
 		while (++i < data->philo_count)
 		{
-			eat_limit += data->philo_data[i].is_alive;
-			if (check_vitals(&data->philo_data[i]) == 0)
+			if (check_vitals(data->philo_data + i) == 0)
 				break ;
+			eat_limit += data->philo_data[i].is_done;
 		}
-		if (data->philo_data[i - 1].is_alive == 0)
-		{
-			data->running = 0;
-			print_message(&data->philo_data[i - 1], "died", 1);
-		}
-		if (eat_limit == -data->philo_count)
+		if (eat_limit == 0)
 			data->running = 0;
 	}
 	i = -1;

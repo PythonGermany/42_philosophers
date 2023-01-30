@@ -25,7 +25,7 @@ typedef struct s_philo
 	int				*running;
 	int				philo_count;
 	int				id;
-	int				is_alive;
+	int				is_done;
 	int				tt_die;
 	int				tt_eat;
 	int				tt_sleep;

@@ -48,7 +48,7 @@ static t_philo	init_philo(t_data *data, char **arg, int id)
 	philo.running = &data->running;
 	philo.philo_count = data->philo_count;
 	philo.id = id;
-	philo.is_alive = 1;
+	philo.is_done = 1;
 	philo.tt_die = ft_atoi(arg[1]);
 	philo.tt_eat = ft_atoi(arg[2]);
 	philo.tt_sleep = ft_atoi(arg[3]);
@@ -60,7 +60,7 @@ static t_philo	init_philo(t_data *data, char **arg, int id)
 	philo.times_eaten = 0;
 	philo.output = &data->output;
 	philo.time = &data->time;
-	philo.last_meal = data->time;
+	gettimeofday(&philo.last_meal, NULL);
 	return (philo);
 }
 
@@ -80,8 +80,8 @@ t_data	*init_data(char **arg)
 	while (++i < data->philo_count)
 		pthread_mutex_init(&data->forks[i], NULL);
 	pthread_mutex_init(&data->output, NULL);
-	i = -1;
 	gettimeofday(&data->time, NULL);
+	i = -1;
 	while (++i < data->philo_count)
 		data->philo_data[i] = init_philo(data, arg, i + 1);
 	return (data);
