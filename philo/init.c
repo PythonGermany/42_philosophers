@@ -60,7 +60,7 @@ static t_philo	init_philo(t_data *data, char **arg, int id)
 	philo.times_eaten = 0;
 	philo.output = &data->output;
 	philo.time = &data->time;
-	gettimeofday(&philo.last_meal, NULL);
+	philo.last_meal = 0;
 	return (philo);
 }
 

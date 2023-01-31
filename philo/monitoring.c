@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 11:00:57 by rburgsta          #+#    #+#             */
-/*   Updated: 2023/01/30 19:09:58 by marvin           ###   ########.fr       */
+/*   Updated: 2023/01/31 15:24:08 by rburgsta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ int	get_time_diff(struct timeval *start)
 
 	gettimeofday(&now, NULL);
 	return ((now.tv_sec - start->tv_sec) * 1000 + \
-	((double)now.tv_usec - start->tv_usec) / 1000);
+	(double)(now.tv_usec - start->tv_usec) / 1000);
 }
 
 static int	check_vitals(t_philo *data)
 {
-	if (get_time_diff(&data->last_meal) > data->tt_die)
+	if (get_time_diff(data->time) - data->last_meal > data->tt_die)
 	{
 		*data->running = 0;
 		data->is_done = 0;
@@ -61,5 +61,7 @@ void	print_message(t_philo *data, char *msg, int print)
 	pthread_mutex_lock(data->output);
 	if (*data->running || print)
 		printf("%d %d %s\n", get_time_diff(data->time), data->id, msg);
+	// else
+	// 	printf("DEBUG: %d %d %s\n", get_time_diff(data->time), data->id, msg);
 	pthread_mutex_unlock(data->output);
 }

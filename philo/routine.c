@@ -14,25 +14,24 @@
 
 static void	take_fork(t_philo *data)
 {
-	struct timeval	now;
-
 	pthread_mutex_lock(&data->forks[data->id - 1]);
-	if (data->philo_count > 0)
+	if (data->philo_count > 1)
 		pthread_mutex_lock(&data->forks[data->id % data->philo_count]);
-	gettimeofday(&now, NULL);
-	data->last_meal = now;
+	//printf("DEBUG: %i %i\n", data->id, get_time_diff(data->time) - data->last_meal);
+	data->last_meal = get_time_diff(data->time);
+	//printf("DEBUG: %i %i\n", data->id, get_time_diff(data->time) - data->last_meal);
 	print_message(data, "has taken a fork", 0);
-	if (data->philo_count > 0)
+	if (data->philo_count > 1)
 		print_message(data, "has taken a fork", 0);
 	else
-		while (*data->running)
+		while (*data->running == 1)
 			continue ;
 }
 
 static void	return_fork(t_philo *data)
 {
 	pthread_mutex_unlock(&data->forks[data->id] - 1);
-	if (data->philo_count > 0)
+	if (data->philo_count > 1)
 		pthread_mutex_unlock(&data->forks[data->id % data->philo_count]);
 	data->times_eaten++;
 }
@@ -46,8 +45,8 @@ void	*philo_routine(void *arg)
 	data = (t_philo *)arg;
 	while (*data->running)
 	{
-		gettimeofday(&start_eat, NULL);
 		take_fork(data);
+		gettimeofday(&start_eat, NULL);
 		print_message(data, "is eating", 0);
 		while (*data->running && get_time_diff(&start_eat) < data->tt_eat)
 			usleep(10);

@@ -33,7 +33,7 @@ typedef struct s_philo
 	pthread_mutex_t	*output;
 	int				max_eat;
 	int				times_eaten;
-	struct timeval	last_meal;
+	int				last_meal;
 	struct timeval	*time;
 }	t_philo;
 
@@ -53,6 +53,6 @@ void	terminate_data(t_data *data);
 void	monitor_simulation(t_data *data);
 void	print_message(t_philo *data, char *msg, int print);
 void	*philo_routine(void *data);
-int	get_time_diff(struct timeval *start);
+int		get_time_diff(struct timeval *start);
 
 #endif

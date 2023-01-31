@@ -65,6 +65,7 @@ int	main(int argc, char **argv)
 	{
 		data = init_data(argv + 1);
 		start_threads(data, data->philo_count - 1);
+		usleep(10);
 		start_threads(data, data->philo_count - 2);
 		monitor_simulation(data);
 		terminate_data(data);
