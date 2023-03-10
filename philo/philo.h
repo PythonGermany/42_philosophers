@@ -49,8 +49,8 @@ typedef struct s_data
 
 t_data	*init_data(char **arg);
 void	terminate_data(t_data *data);
-void	monitor_simulation(t_data *data);
-void	print_message(t_philo *data, char *msg, int print);
+void	wait_simulation(t_data *data);
+void	print_message(t_philo *data, char *msg, int disable_output);
 void	*philo_routine(void *data);
 int		get_time_diff(struct timeval *start);
 int		check_vitals(t_philo *data);

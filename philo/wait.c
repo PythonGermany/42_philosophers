@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   monitoring.c                                       :+:      :+:    :+:   */
+/*   wait.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 11:00:57 by rburgsta          #+#    #+#             */
-/*   Updated: 2023/03/10 17:01:41 by rburgsta         ###   ########.fr       */
+/*   Updated: 2023/03/10 17:12:05 by rburgsta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_vitals(t_philo *data)
 	return (*data->running);
 }
 
-void	monitor_simulation(t_data *data)
+void	wait_simulation(t_data *data)
 {
 	int	i;
 

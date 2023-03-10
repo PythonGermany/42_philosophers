@@ -67,7 +67,7 @@ int	main(int argc, char **argv)
 		start_threads(data, data->philo_count - 1);
 		usleep(10);
 		start_threads(data, data->philo_count - 2);
-		monitor_simulation(data);
+		wait_simulation(data);
 		terminate_data(data);
 	}
 	return (0);
