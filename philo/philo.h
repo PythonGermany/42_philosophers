@@ -25,7 +25,6 @@ typedef struct s_philo
 	int				*running;
 	int				philo_count;
 	int				id;
-	int				is_done;
 	int				tt_die;
 	int				tt_eat;
 	int				tt_sleep;
@@ -54,5 +53,6 @@ void	monitor_simulation(t_data *data);
 void	print_message(t_philo *data, char *msg, int print);
 void	*philo_routine(void *data);
 int		get_time_diff(struct timeval *start);
+int		check_vitals(t_philo *data);
 
 #endif

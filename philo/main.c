@@ -30,7 +30,7 @@ static int	check_int(char **str)
 	i = -1;
 	while (str[++i] != NULL)
 	{
-		if ((ft_strlen(str[i]) > 10) || *str[i] == '0')
+		if ((ft_strlen(str[i]) > 10) || *str[i] == '0' || *str[i] == '\0')
 			return (1);
 		i2 = -1;
 		while (++i2 < ft_strlen(str[i]))

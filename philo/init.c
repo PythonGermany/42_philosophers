@@ -48,7 +48,6 @@ static t_philo	init_philo(t_data *data, char **arg, int id)
 	philo.running = &data->running;
 	philo.philo_count = data->philo_count;
 	philo.id = id;
-	philo.is_done = 1;
 	philo.tt_die = ft_atoi(arg[1]);
 	philo.tt_eat = ft_atoi(arg[2]);
 	philo.tt_sleep = ft_atoi(arg[3]);
@@ -89,8 +88,8 @@ t_data	*init_data(char **arg)
 
 void	terminate_data(t_data *data)
 {
-	while (--data->philo_count >= 0)
-		pthread_mutex_destroy(&data->forks[data->philo_count]);
+	while (data->philo_count-- > 0)
+		pthread_mutex_destroy(data->forks + data->philo_count);
 	pthread_mutex_destroy(&data->output);
 	free(data->philos);
 	free(data->philo_data);
