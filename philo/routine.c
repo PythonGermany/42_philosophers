@@ -12,6 +12,22 @@
 
 #include "philo.h"
 
+int	get_time_diff(struct timeval *start)
+{
+	struct timeval	now;
+
+	gettimeofday(&now, NULL);
+	return ((now.tv_sec - start->tv_sec) * 1000 + \
+	(double)(now.tv_usec - start->tv_usec) / 1000);
+}
+
+static int	check_vitals(t_philo *data)
+{
+	if (get_time_diff(data->time) - data->last_meal > data->tt_die)
+		print_message(data, " died", 1);
+	return (*data->running);
+}
+
 static void	take_fork(t_philo *data)
 {
 	pthread_mutex_lock(&data->forks[data->id - 1]);

@@ -12,6 +12,16 @@
 
 #include "philo.h"
 
+void	print_message(t_philo *data, char *msg, int disable_output)
+{
+	pthread_mutex_lock(data->output);
+	if (*data->running)
+		printf("%d %d %s\n", get_time_diff(data->time), data->id, msg);
+	if (disable_output)
+		*data->running = 0;
+	pthread_mutex_unlock(data->output);
+}
+
 static int	ft_strlen(const char *s)
 {
 	int	len;
@@ -54,6 +64,7 @@ static void	start_threads(t_data *data, int start)
 int	main(int argc, char **argv)
 {
 	t_data	*data;
+	int		i;
 
 	if (argc < 5 || argc > 6 || check_int(&argv[1]))
 	{
@@ -67,7 +78,9 @@ int	main(int argc, char **argv)
 		start_threads(data, data->philo_count - 1);
 		usleep(10);
 		start_threads(data, data->philo_count - 2);
-		wait_simulation(data);
+		i = -1;
+		while (++i < data->philo_count)
+			pthread_join(data->philos[i], NULL);
 		terminate_data(data);
 	}
 	return (0);

@@ -6,7 +6,7 @@
 #    By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/25 15:38:03 by rburgsta          #+#    #+#              #
-#    Updated: 2023/03/10 17:11:44 by rburgsta         ###   ########.fr        #
+#    Updated: 2023/03/10 17:39:09 by rburgsta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = philo
 FLAGS = -Wall -Wextra -Werror #-pthread
 LK_SAN = #-Wno-gnu-include-next -I/LeakSanitizer/include -L../../LeakSanitizer/ -llsan -lc++
 
-SRC = main.c init.c routine.c wait.c
+SRC = main.c init.c routine.c
 OBJ = $(SRC:%.c=%.o)
 
 all : $(NAME)
