@@ -16,7 +16,7 @@ void	print_message(t_philo *data, char *msg, int disable_output)
 {
 	pthread_mutex_lock(data->output);
 	if (*data->running)
-		printf("%d %d %s\n", get_time_diff(data->time), data->id, msg);
+		printf("%d %d %s\n", time_diff(data->time), data->id, msg);
 	if (disable_output)
 		*data->running = 0;
 	pthread_mutex_unlock(data->output);
