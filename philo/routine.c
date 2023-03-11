@@ -24,7 +24,7 @@ int	time_diff(struct timeval *start)
 static int	check_vitals(t_philo *data)
 {
 	if (time_diff(data->time) - data->last_meal > data->tt_die)
-		print_message(data, " died", 1);
+		print_message(data, "died", 1);
 	return (*data->running);
 }
 
