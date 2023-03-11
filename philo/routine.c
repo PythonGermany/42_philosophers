@@ -12,13 +12,14 @@
 
 #include "philo.h"
 
-int	time_diff(struct timeval *start)
+static void	print_message(t_philo *data, char *msg, int disable_output)
 {
-	struct timeval	now;
-
-	gettimeofday(&now, NULL);
-	return ((now.tv_sec - start->tv_sec) * 1000 + \
-	(double)(now.tv_usec - start->tv_usec) / 1000);
+	pthread_mutex_lock(data->output);
+	if (*data->running)
+		printf("%d %d %s\n", time_diff(data->time), data->id, msg);
+	if (disable_output)
+		*data->running = 0;
+	pthread_mutex_unlock(data->output);
 }
 
 static int	check_vitals(t_philo *data)

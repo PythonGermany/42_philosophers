@@ -40,7 +40,7 @@ typedef struct s_data
 {
 	int				running;
 	int				philo_count;
-	pthread_t		*philos;
+	pthread_t		*philo_threads;
 	t_philo			*philo_data;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	output;
@@ -49,7 +49,6 @@ typedef struct s_data
 
 t_data	*init_data(char **arg);
 void	terminate_data(t_data *data);
-void	print_message(t_philo *data, char *msg, int disable_output);
 void	*philo_routine(void *data);
 int		time_diff(struct timeval *start);
 

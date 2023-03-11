@@ -12,16 +12,6 @@
 
 #include "philo.h"
 
-void	print_message(t_philo *data, char *msg, int disable_output)
-{
-	pthread_mutex_lock(data->output);
-	if (*data->running)
-		printf("%d %d %s\n", time_diff(data->time), data->id, msg);
-	if (disable_output)
-		*data->running = 0;
-	pthread_mutex_unlock(data->output);
-}
-
 static int	ft_strlen(const char *s)
 {
 	int	len;
@@ -53,11 +43,21 @@ static int	check_int(char **str)
 
 static void	start_threads(t_data *data, int start)
 {
+	int	temp;
+
+	temp = start - 1;
 	while (start >= 0)
 	{
-		pthread_create(data->philos + start, NULL, &philo_routine, \
+		pthread_create(data->philo_threads + start, NULL, &philo_routine, \
 			(void *)(data->philo_data + start));
 		start -= 2;
+	}
+	usleep(10);
+	while (temp >= 0)
+	{
+		pthread_create(data->philo_threads + temp, NULL, &philo_routine, \
+			(void *)(data->philo_data + temp));
+		temp -= 2;
 	}
 }
 
@@ -66,21 +66,24 @@ int	main(int argc, char **argv)
 	t_data	*data;
 	int		i;
 
-	if (argc < 5 || argc > 6 || check_int(&argv[1]))
+	if (argc < 5 || argc > 6 || check_int(argv + 1))
 	{
-		printf("Use: %s number_of_philosophers time_to_die ", argv[0]);
-		printf("time_to_eat time_to_sleep ");
-		printf("[number_of_times_each_philosopher_must_eat]\n");
+		printf("Use: %s number_of_philosophers time_die time_eat", argv[0]);
+		printf(" time_sleep [number_of_times_each_philosopher_must_eat]\n");
 	}
 	else
 	{
 		data = init_data(argv + 1);
-		start_threads(data, data->philo_count - 1);
-		usleep(10);
-		start_threads(data, data->philo_count - 2);
-		i = -1;
-		while (++i < data->philo_count)
-			pthread_join(data->philos[i], NULL);
+		if (data == NULL)
+			return (printf("ERROR: data malloc fail\n"), 1);
+		if (data->philo_threads != NULL && data->philo_data != NULL \
+			&& data->forks != NULL)
+		{
+			start_threads(data, data->philo_count - 1);
+			i = -1;
+			while (++i < data->philo_count)
+				pthread_join(data->philo_threads[i], NULL);
+		}
 		terminate_data(data);
 	}
 	return (0);
