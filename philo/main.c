@@ -86,7 +86,7 @@ int	main(int argc, char **argv)
 		if (data == NULL)
 			return (printf("ERROR: data malloc fail\n"), 1);
 		if (data->philo_threads != NULL && data->philo_data != NULL \
-			&& data->forks != NULL && data->fork_state != NULL)
+			&& data->forks != NULL && data->forks_state != NULL)
 		{
 			start_threads(data, data->philo_count - 1);
 			i = -1;

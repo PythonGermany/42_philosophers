@@ -43,7 +43,7 @@ typedef struct s_data
 	pthread_t		*philo_threads;
 	t_philo			*philo_data;
 	pthread_mutex_t	*forks;
-	int				*fork_state;
+	int				*forks_state;
 	pthread_mutex_t	output;
 	struct timeval	time;
 }	t_data;
