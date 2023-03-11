@@ -31,9 +31,16 @@ static int	check_vitals(t_philo *data)
 
 static void	take_fork(t_philo *data)
 {
+	while (*data->running && (data->fork_state[data->id - 1] \
+		|| data->fork_state[data->id % data->philo_count]))
+		check_vitals(data);
 	pthread_mutex_lock(&data->forks[data->id - 1]);
+	data->fork_state[data->id - 1] = 1;
 	if (data->philo_count > 1)
+	{
 		pthread_mutex_lock(&data->forks[data->id % data->philo_count]);
+		data->fork_state[data->id % data->philo_count] = 1;
+	}
 	data->last_meal = time_diff(data->time);
 	print_message(data, "has taken a fork", 0);
 	if (data->philo_count > 1)
@@ -46,8 +53,12 @@ static void	take_fork(t_philo *data)
 static void	return_fork(t_philo *data)
 {
 	pthread_mutex_unlock(&data->forks[data->id] - 1);
+	data->fork_state[data->id - 1] = 0;
 	if (data->philo_count > 1)
+	{
 		pthread_mutex_unlock(&data->forks[data->id % data->philo_count]);
+		data->fork_state[data->id % data->philo_count] = 0;
+	}
 	data->times_eaten++;
 }
 

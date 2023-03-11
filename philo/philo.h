@@ -28,6 +28,7 @@ typedef struct s_philo
 	int				tt_eat;
 	int				tt_sleep;
 	pthread_mutex_t	*forks;
+	int				*fork_state;
 	pthread_mutex_t	*output;
 	int				max_eat;
 	int				times_eaten;
@@ -42,6 +43,7 @@ typedef struct s_data
 	pthread_t		*philo_threads;
 	t_philo			*philo_data;
 	pthread_mutex_t	*forks;
+	int				*fork_state;
 	pthread_mutex_t	output;
 	struct timeval	time;
 }	t_data;

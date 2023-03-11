@@ -12,15 +12,6 @@
 
 #include "philo.h"
 
-int	time_diff(struct timeval *start)
-{
-	struct timeval	now;
-
-	gettimeofday(&now, NULL);
-	return ((now.tv_sec - start->tv_sec) * 1000 + \
-	(double)(now.tv_usec - start->tv_usec) / 1000);
-}
-
 static int	ft_atoi(const char *str)
 {
 	int			i;
@@ -59,6 +50,7 @@ static void	init_philo(t_data *data, char **arg, int i)
 	data->philo_data[i].tt_eat = ft_atoi(arg[2]);
 	data->philo_data[i].tt_sleep = ft_atoi(arg[3]);
 	data->philo_data[i].forks = data->forks;
+	data->philo_data[i].fork_state = data->fork_state;
 	if (arg[4] != NULL)
 		data->philo_data[i].max_eat = ft_atoi(arg[4]);
 	else
@@ -67,6 +59,16 @@ static void	init_philo(t_data *data, char **arg, int i)
 	data->philo_data[i].output = &data->output;
 	data->philo_data[i].time = &data->time;
 	data->philo_data[i].last_meal = 0;
+}
+
+static void	allocate_data_members(t_data *data, char **arg)
+{
+	data->philo_threads = \
+		(pthread_t *)malloc(ft_atoi(arg[0]) * sizeof(pthread_t));
+	data->philo_data = (t_philo *)malloc(ft_atoi(arg[0]) * sizeof(t_philo));
+	data->forks = \
+		(pthread_mutex_t *)malloc(ft_atoi(arg[0]) * sizeof(pthread_mutex_t));
+	data->fork_state = (int *)malloc(ft_atoi(arg[0]) * sizeof(int));
 }
 
 t_data	*init_data(char **arg)
@@ -80,17 +82,16 @@ t_data	*init_data(char **arg)
 	data->running = 1;
 	data->philo_count = ft_atoi(arg[0]);
 	pthread_mutex_init(&data->output, NULL);
-	data->philo_threads = \
-		(pthread_t *)malloc(ft_atoi(arg[0]) * sizeof(pthread_t));
-	data->philo_data = (t_philo *)malloc(ft_atoi(arg[0]) * sizeof(t_philo));
-	data->forks = \
-		(pthread_mutex_t *)malloc(ft_atoi(arg[0]) * sizeof(pthread_mutex_t));
+	allocate_data_members(data, arg);
 	if (data->philo_threads == NULL || data->philo_data == NULL \
-		|| data->forks == NULL)
+		|| data->forks == NULL || data->fork_state == NULL)
 		return (data);
 	i = -1;
 	while (++i < data->philo_count)
+	{
+		data->fork_state[i] = 0;
 		pthread_mutex_init(&data->forks[i], NULL);
+	}
 	gettimeofday(&data->time, NULL);
 	i = -1;
 	while (++i < data->philo_count)
@@ -117,5 +118,9 @@ void	terminate_data(t_data *data)
 		free(data->forks);
 	else
 		printf("ERROR: data->forks malloc fail\n");
+	if (data->fork_state != NULL)
+		free(data->fork_state);
+	else
+		printf("ERROR: data->forks_state malloc fail\n");
 	free(data);
 }

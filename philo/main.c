@@ -12,6 +12,15 @@
 
 #include "philo.h"
 
+int	time_diff(struct timeval *start)
+{
+	struct timeval	now;
+
+	gettimeofday(&now, NULL);
+	return ((now.tv_sec - start->tv_sec) * 1000 + \
+	(double)(now.tv_usec - start->tv_usec) / 1000);
+}
+
 static int	ft_strlen(const char *s)
 {
 	int	len;
@@ -77,7 +86,7 @@ int	main(int argc, char **argv)
 		if (data == NULL)
 			return (printf("ERROR: data malloc fail\n"), 1);
 		if (data->philo_threads != NULL && data->philo_data != NULL \
-			&& data->forks != NULL)
+			&& data->forks != NULL && data->fork_state != NULL)
 		{
 			start_threads(data, data->philo_count - 1);
 			i = -1;
