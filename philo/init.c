@@ -50,7 +50,6 @@ static void	init_philo(t_data *data, char **arg, int i)
 	data->philo_data[i].tt_eat = ft_atoi(arg[2]);
 	data->philo_data[i].tt_sleep = ft_atoi(arg[3]);
 	data->philo_data[i].forks = data->forks;
-	data->philo_data[i].fork_state = data->forks_state;
 	if (arg[4] != NULL)
 		data->philo_data[i].max_eat = ft_atoi(arg[4]);
 	else
@@ -68,7 +67,6 @@ static void	allocate_data_members(t_data *data, char **arg)
 	data->philo_data = (t_philo *)malloc(ft_atoi(arg[0]) * sizeof(t_philo));
 	data->forks = \
 		(pthread_mutex_t *)malloc(ft_atoi(arg[0]) * sizeof(pthread_mutex_t));
-	data->forks_state = (int *)malloc(ft_atoi(arg[0]) * sizeof(int));
 }
 
 t_data	*init_data(char **arg)
@@ -84,14 +82,11 @@ t_data	*init_data(char **arg)
 	pthread_mutex_init(&data->output, NULL);
 	allocate_data_members(data, arg);
 	if (data->philo_threads == NULL || data->philo_data == NULL \
-		|| data->forks == NULL || data->forks_state == NULL)
+		|| data->forks == NULL)
 		return (data);
 	i = -1;
 	while (++i < data->philo_count)
-	{
-		data->forks_state[i] = 0;
 		pthread_mutex_init(&data->forks[i], NULL);
-	}
 	gettimeofday(&data->time, NULL);
 	i = -1;
 	while (++i < data->philo_count)
@@ -102,7 +97,7 @@ t_data	*init_data(char **arg)
 void	terminate_data(t_data *data)
 {
 	if (data->philo_threads != NULL && data->philo_data != NULL \
-		&& data->forks != NULL && data->forks_state != NULL)
+		&& data->forks != NULL)
 		while (data->philo_count-- > 0)
 			pthread_mutex_destroy(data->forks + data->philo_count);
 	pthread_mutex_destroy(&data->output);
@@ -118,9 +113,5 @@ void	terminate_data(t_data *data)
 		free(data->forks);
 	else
 		printf("ERROR: data->forks malloc fail\n");
-	if (data->forks_state != NULL)
-		free(data->forks_state);
-	else
-		printf("ERROR: data->forks_state malloc fail\n");
 	free(data);
 }

@@ -14,7 +14,7 @@
 
 int	time_diff(struct timeval *start)
 {
-	struct timeval	now;
+	static struct timeval	now;
 
 	gettimeofday(&now, NULL);
 	return ((now.tv_sec - start->tv_sec) * 1000 + \
@@ -74,6 +74,7 @@ int	main(int argc, char **argv)
 {
 	t_data	*data;
 	int		i;
+	int		max_eat;
 
 	if (argc < 5 || argc > 6 || check_int(argv + 1))
 	{
@@ -86,9 +87,22 @@ int	main(int argc, char **argv)
 		if (data == NULL)
 			return (printf("ERROR: data malloc fail\n"), 1);
 		if (data->philo_threads != NULL && data->philo_data != NULL \
-			&& data->forks != NULL && data->forks_state != NULL)
+			&& data->forks != NULL)
 		{
 			start_threads(data, data->philo_count - 1);
+			while (data->running)
+			{
+				i = -1;
+				max_eat = 0;
+				while (++i < data->philo_count)
+				{
+					max_eat += data->philo_data[i].times_eaten;
+					if (check_vitals(data->philo_data + i) == 0)
+						break ;
+				}
+				if (max_eat == -data->philo_count)
+					break ;
+			}
 			i = -1;
 			while (++i < data->philo_count)
 				pthread_join(data->philo_threads[i], NULL);
