@@ -72,10 +72,10 @@ void	*philo_routine(void *arg)
 		while (check_vitals(data) && time_diff(&start_eat) < data->tt_eat)
 			usleep(10);
 		change_fork_state(data, 0);
+		gettimeofday(&start_sleep, NULL);
 		data->times_eaten++;
 		if (data->max_eat && data->times_eaten >= data->max_eat)
 			break ;
-		gettimeofday(&start_sleep, NULL);
 		print_message(data, "is sleeping", 0);
 		while (check_vitals(data) && time_diff(&start_sleep) < data->tt_sleep)
 			usleep(10);
