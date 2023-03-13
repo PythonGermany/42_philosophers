@@ -52,21 +52,11 @@ static int	check_int(char **str)
 
 static void	start_threads(t_data *data, int start)
 {
-	int	temp;
-
-	temp = start - 1;
 	while (start >= 0)
 	{
 		pthread_create(data->philo_threads + start, NULL, &philo_routine, \
 			(void *)(data->philo_data + start));
 		start -= 2;
-	}
-	usleep(10);
-	while (temp >= 0)
-	{
-		pthread_create(data->philo_threads + temp, NULL, &philo_routine, \
-			(void *)(data->philo_data + temp));
-		temp -= 2;
 	}
 }
 
@@ -85,14 +75,15 @@ int	main(int argc, char **argv)
 		data = init_data(argv + 1);
 		if (data == NULL)
 			return (printf("ERROR: data malloc fail\n"), 1);
-		if (data->philo_threads != NULL && data->philo_data != NULL \
-			&& data->forks != NULL && data->forks_state != NULL)
-		{
-			start_threads(data, data->philo_count - 1);
-			i = -1;
-			while (++i < data->philo_count)
-				pthread_join(data->philo_threads[i], NULL);
-		}
+		if (data->philo_threads == NULL || data->philo_data == NULL \
+			|| data->forks == NULL || data->forks_state == NULL)
+			return (terminate_data(data), 1);
+		start_threads(data, data->philo_count - 1);
+		usleep(10);
+		start_threads(data, data->philo_count - 2);
+		i = -1;
+		while (++i < data->philo_count)
+			pthread_join(data->philo_threads[i], NULL);
 		terminate_data(data);
 	}
 	return (0);
