@@ -24,7 +24,7 @@ static void	print_message(t_philo *data, char *msg, int disable_output)
 
 static int	check_vitals(t_philo *data)
 {
-	if (time_diff(data->time) - data->last_meal > data->tt_die)
+	if (time_diff(data->time) - data->last_meal >= data->tt_die)
 		print_message(data, "died", 1);
 	return (*data->running);
 }
