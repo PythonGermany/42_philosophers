@@ -12,16 +12,6 @@
 
 #include "philo.h"
 
-static void	print_message(t_philo *data, char *msg, int disable_output)
-{
-	pthread_mutex_lock(data->output);
-	if (*data->running)
-		printf("%d %d %s\n", time_diff(data->time), data->id, msg);
-	if (disable_output)
-		*data->running = 0;
-	pthread_mutex_unlock(data->output);
-}
-
 static int	check_vitals(t_philo *data)
 {
 	if (time_diff(data->time) - data->last_meal >= data->tt_die)
@@ -29,18 +19,35 @@ static int	check_vitals(t_philo *data)
 	return (*data->running);
 }
 
-static void	take_fork(t_philo *data)
+static int	check_fork_state(t_philo *data, int fork_id)
 {
-	while (*data->running && (data->fork_state[data->id - 1] \
-		|| data->fork_state[data->id % data->philo_count]))
-		check_vitals(data);
+	int	state;
+
+	pthread_mutex_lock(&data->forks[fork_id]);
+	state = data->fork_state[fork_id];
+	pthread_mutex_unlock(&data->forks[fork_id]);
+	return (state);
+}
+
+static void	change_fork_state(t_philo *data, int state)
+{
 	pthread_mutex_lock(&data->forks[data->id - 1]);
-	data->fork_state[data->id - 1] = 1;
+	data->fork_state[data->id - 1] = state;
+	pthread_mutex_unlock(&data->forks[data->id] - 1);
 	if (data->philo_count > 1)
 	{
 		pthread_mutex_lock(&data->forks[data->id % data->philo_count]);
-		data->fork_state[data->id % data->philo_count] = 1;
+		data->fork_state[data->id % data->philo_count] = state;
+		pthread_mutex_unlock(&data->forks[data->id % data->philo_count]);
 	}
+}
+
+static void	take_fork(t_philo *data)
+{
+	while (*data->running && (check_fork_state(data, data->id - 1) \
+		|| check_fork_state(data, data->id % data->philo_count)))
+		check_vitals(data);
+	change_fork_state(data, 1);
 	data->last_meal = time_diff(data->time);
 	print_message(data, "has taken a fork", 0);
 	if (data->philo_count > 1)
@@ -48,18 +55,6 @@ static void	take_fork(t_philo *data)
 	else
 		while (check_vitals(data))
 			continue ;
-}
-
-static void	return_fork(t_philo *data)
-{
-	pthread_mutex_unlock(&data->forks[data->id] - 1);
-	data->fork_state[data->id - 1] = 0;
-	if (data->philo_count > 1)
-	{
-		pthread_mutex_unlock(&data->forks[data->id % data->philo_count]);
-		data->fork_state[data->id % data->philo_count] = 0;
-	}
-	data->times_eaten++;
 }
 
 void	*philo_routine(void *arg)
@@ -76,7 +71,8 @@ void	*philo_routine(void *arg)
 		print_message(data, "is eating", 0);
 		while (check_vitals(data) && time_diff(&start_eat) < data->tt_eat)
 			usleep(10);
-		return_fork(data);
+		change_fork_state(data, 0);
+		data->times_eaten++;
 		if (data->max_eat && data->times_eaten >= data->max_eat)
 			break ;
 		gettimeofday(&start_sleep, NULL);
