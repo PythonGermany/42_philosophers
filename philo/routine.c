@@ -29,15 +29,15 @@ static int	check_fork_state(t_philo *data, int fork_id)
 	return (state);
 }
 
-static void	change_fork_state(t_philo *data, int state)
+static void	change_fork_state(t_philo *data, int new_state)
 {
 	pthread_mutex_lock(&data->forks[data->id - 1]);
-	data->fork_state[data->id - 1] = state;
+	data->fork_state[data->id - 1] = new_state;
 	pthread_mutex_unlock(&data->forks[data->id] - 1);
 	if (data->philo_count > 1)
 	{
 		pthread_mutex_lock(&data->forks[data->id % data->philo_count]);
-		data->fork_state[data->id % data->philo_count] = state;
+		data->fork_state[data->id % data->philo_count] = new_state;
 		pthread_mutex_unlock(&data->forks[data->id % data->philo_count]);
 	}
 }

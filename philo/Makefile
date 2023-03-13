@@ -6,7 +6,7 @@
 #    By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/25 15:38:03 by rburgsta          #+#    #+#              #
-#    Updated: 2023/03/13 13:45:32 by rburgsta         ###   ########.fr        #
+#    Updated: 2023/03/13 14:05:30 by rburgsta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,10 +25,14 @@ $(NAME) : $(OBJ)
 %.o : %.c
 	cc -c $(FLAGS) $^
 
-b : $(NAME) clean
+bin : $(NAME) clean
 	clear
 
-val : bin
+git : 
+	git add Makefile *.c *.h
+	git commit -m $(msg)
+	git status
+	git push
 
 clean :
 	rm -rf $(OBJ)
