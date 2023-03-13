@@ -19,14 +19,16 @@
 # include <stdlib.h>
 # include <sys/time.h>
 
+typedef unsigned long long	t_llu;
+
 typedef struct s_philo
 {
 	int				*running;
 	int				philo_count;
 	int				id;
-	int				tt_die;
-	int				tt_eat;
-	int				tt_sleep;
+	t_llu			tt_die;
+	t_llu			tt_eat;
+	t_llu			tt_sleep;
 	pthread_mutex_t	*forks;
 	int				*fork_state;
 	pthread_mutex_t	*output;
@@ -51,7 +53,7 @@ typedef struct s_data
 t_data	*init_data(char **arg);
 void	terminate_data(t_data *data);
 void	*philo_routine(void *data);
-int		time_diff(struct timeval *start);
+t_llu	time_diff(struct timeval *start);
 void	print_message(t_philo *data, char *msg, int disable_output);
 
 #endif

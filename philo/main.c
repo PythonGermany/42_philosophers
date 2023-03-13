@@ -12,13 +12,13 @@
 
 #include "philo.h"
 
-int	time_diff(struct timeval *start)
+unsigned long long int	time_diff(struct timeval *start)
 {
 	struct timeval	now;
 
 	gettimeofday(&now, NULL);
-	return ((now.tv_sec - start->tv_sec) * 1000 + \
-	(double)(now.tv_usec - start->tv_usec) / 1000);
+	return ((now.tv_sec - start->tv_sec) * 1000000 + \
+	(now.tv_usec - start->tv_usec));
 }
 
 static int	ft_strlen(const char *s)

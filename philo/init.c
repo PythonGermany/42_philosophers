@@ -46,9 +46,9 @@ static void	init_philo(t_data *data, char **arg, int i)
 	data->philo_data[i].running = &data->running;
 	data->philo_data[i].philo_count = data->philo_count;
 	data->philo_data[i].id = i + 1;
-	data->philo_data[i].tt_die = ft_atoi(arg[1]);
-	data->philo_data[i].tt_eat = ft_atoi(arg[2]);
-	data->philo_data[i].tt_sleep = ft_atoi(arg[3]);
+	data->philo_data[i].tt_die = ft_atoi(arg[1]) * 1000;
+	data->philo_data[i].tt_eat = ft_atoi(arg[2]) * 1000;
+	data->philo_data[i].tt_sleep = ft_atoi(arg[3]) * 1000;
 	data->philo_data[i].forks = data->forks;
 	data->philo_data[i].fork_state = data->forks_state;
 	if (arg[4] != NULL)
