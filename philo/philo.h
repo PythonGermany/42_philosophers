@@ -32,6 +32,7 @@ typedef struct s_philo
 	pthread_mutex_t	*forks;
 	int				*fork_state;
 	pthread_mutex_t	*output;
+	pthread_mutex_t	*mutex_running;
 	int				max_eat;
 	int				times_eaten;
 	int				last_meal;
@@ -47,6 +48,7 @@ typedef struct s_data
 	pthread_mutex_t	*forks;
 	int				*forks_state;
 	pthread_mutex_t	output;
+	pthread_mutex_t	mutex_running;
 	struct timeval	time;
 }	t_data;
 

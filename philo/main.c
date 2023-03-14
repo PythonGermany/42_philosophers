@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-unsigned long long int	time_diff(struct timeval *start)
+t_llu	time_diff(struct timeval *start)
 {
 	struct timeval	now;
 

@@ -57,6 +57,7 @@ static void	init_philo(t_data *data, char **arg, int i)
 		data->philo_data[i].max_eat = 0;
 	data->philo_data[i].times_eaten = 0;
 	data->philo_data[i].output = &data->output;
+	data->philo_data[i].mutex_running = &data->mutex_running;
 	data->philo_data[i].time = &data->time;
 	data->philo_data[i].last_meal = 0;
 }
@@ -82,6 +83,7 @@ t_data	*init_data(char **arg)
 	data->running = 1;
 	data->philo_count = ft_atoi(arg[0]);
 	pthread_mutex_init(&data->output, NULL);
+	pthread_mutex_init(&data->mutex_running, NULL);
 	allocate_data_members(data, arg);
 	if (data->philo_threads == NULL || data->philo_data == NULL \
 		|| data->forks == NULL || data->forks_state == NULL)
@@ -106,6 +108,7 @@ void	terminate_data(t_data *data)
 		while (data->philo_count-- > 0)
 			pthread_mutex_destroy(data->forks + data->philo_count);
 	pthread_mutex_destroy(&data->output);
+	pthread_mutex_destroy(&data->mutex_running);
 	if (data->philo_threads != NULL)
 		free(data->philo_threads);
 	else
