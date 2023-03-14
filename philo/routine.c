@@ -43,9 +43,9 @@ static int	change_fork_state(t_philo *data, int fork_id, int new_state)
 
 static void	take_fork(t_philo *data)
 {
-	while (*data->running\
-		&& (change_fork_state(data, data->id - 1, data->id) != data->id\
-		|| change_fork_state(data, data->id % data->philo_count, data->id)\
+	while (*data->running != 0 \
+		&& (change_fork_state(data, data->id - 1, data->id) != data->id \
+		|| change_fork_state(data, data->id % data->philo_count, data->id) \
 		!= data->id))
 		check_vitals(data);
 	data->last_meal = time_diff(data->time);
@@ -75,8 +75,7 @@ void	*philo_routine(void *arg)
 		if (data->philo_count > 1)
 			change_fork_state(data, data->id % data->philo_count, 0);
 		gettimeofday(&start_sleep, NULL);
-		data->times_eaten++;
-		if (data->max_eat && data->times_eaten >= data->max_eat)
+		if (data->max_eat && ++data->times_eaten >= data->max_eat)
 			break ;
 		print_message(data, "is sleeping", 0);
 		while (check_vitals(data) && time_diff(&start_sleep) < data->tt_sleep)
