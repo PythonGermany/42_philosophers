@@ -12,6 +12,16 @@
 
 #include "philo.h"
 
+static void	print_message(t_philo *data, char *msg, int disable_output)
+{
+	pthread_mutex_lock(data->output);
+	if (*data->running)
+		printf("%llu %d %s\n", time_diff(data->time) / 1000, data->id, msg);
+	if (disable_output)
+		*data->running = 0;
+	pthread_mutex_unlock(data->output);
+}
+
 static int	check_vitals(t_philo *data)
 {
 	if (time_diff(data->time) - data->last_meal >= data->tt_die)

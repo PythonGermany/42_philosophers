@@ -54,6 +54,5 @@ t_data	*init_data(char **arg);
 void	terminate_data(t_data *data);
 void	*philo_routine(void *data);
 t_llu	time_diff(struct timeval *start);
-void	print_message(t_philo *data, char *msg, int disable_output);
 
 #endif
