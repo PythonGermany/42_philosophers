@@ -54,6 +54,11 @@ static void	start_threads(t_data *data, int start)
 {
 	while (start >= 0)
 	{
+		if (start % 2)
+		{
+			data->forks_state[start - 1] = start;
+			data->forks_state[start % data->philo_count] = start;
+		}
 		pthread_create(data->philo_threads + start, NULL, &philo_routine, \
 			(void *)(data->philo_data + start));
 		start -= 2;
