@@ -80,7 +80,7 @@ t_data	*init_data(char **arg)
 	data = (t_data *)malloc(sizeof(t_data));
 	if (data == NULL)
 		return (NULL);
-	data->running = 1;
+	data->running = 0;
 	data->philo_count = ft_atoi(arg[0]);
 	pthread_mutex_init(&data->output, NULL);
 	pthread_mutex_init(&data->mutex_running, NULL);

@@ -69,6 +69,8 @@ void	*philo_routine(void *arg)
 	struct timeval	start_sleep;
 
 	data = (t_philo *)arg;
+	while (!check_vitals(data))
+		usleep(5);
 	while (check_vitals(data))
 	{
 		take_forks(data);

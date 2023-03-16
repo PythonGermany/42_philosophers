@@ -52,7 +52,7 @@ static int	check_int(char **str)
 
 static void	start_threads(t_data *data, int start)
 {
-	while (start >= 0)
+	while (start-- > 0)
 	{
 		if (start % 2)
 		{
@@ -61,7 +61,6 @@ static void	start_threads(t_data *data, int start)
 		}
 		pthread_create(data->philo_threads + start, NULL, &philo_routine, \
 			(void *)(data->philo_data + start));
-		start -= 2;
 	}
 }
 
@@ -83,9 +82,11 @@ int	main(int argc, char **argv)
 		if (data->philo_threads == NULL || data->philo_data == NULL \
 			|| data->forks == NULL || data->forks_state == NULL)
 			return (terminate_data(data), 1);
-		start_threads(data, data->philo_count - 1);
-		usleep(10);
 		start_threads(data, data->philo_count - 2);
+		pthread_mutex_lock(&data->mutex_running);
+		data->running = 1;
+		gettimeofday(&data->time, NULL);
+		pthread_mutex_unlock(&data->mutex_running);
 		i = -1;
 		while (++i < data->philo_count)
 			pthread_join(data->philo_threads[i], NULL);
