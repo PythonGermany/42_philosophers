@@ -54,14 +54,19 @@ static void	start_threads(t_data *data, int start)
 {
 	while (start-- > 0)
 	{
-		if (start % 2)
+		if ((start + 1) % 2)
 		{
-			data->forks_state[start - 1] = start;
-			data->forks_state[start % data->philo_count] = start;
+			data->forks_state[start] = start + 1;
+			if (data->philo_count > 1)
+				data->forks_state[(start + 1) % data->philo_count] = start + 1;
 		}
 		pthread_create(data->philo_threads + start, NULL, &philo_routine, \
 			(void *)(data->philo_data + start));
 	}
+	pthread_mutex_lock(&data->mutex_running);
+	data->running = 1;
+	gettimeofday(&data->time, NULL);
+	pthread_mutex_unlock(&data->mutex_running);
 }
 
 int	main(int argc, char **argv)
@@ -82,11 +87,7 @@ int	main(int argc, char **argv)
 		if (data->philo_threads == NULL || data->philo_data == NULL \
 			|| data->forks == NULL || data->forks_state == NULL)
 			return (terminate_data(data), 1);
-		start_threads(data, data->philo_count - 2);
-		pthread_mutex_lock(&data->mutex_running);
-		data->running = 1;
-		gettimeofday(&data->time, NULL);
-		pthread_mutex_unlock(&data->mutex_running);
+		start_threads(data, data->philo_count);
 		i = -1;
 		while (++i < data->philo_count)
 			pthread_join(data->philo_threads[i], NULL);

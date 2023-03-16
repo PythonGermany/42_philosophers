@@ -30,12 +30,14 @@ typedef struct s_philo
 	t_llu			tt_eat;
 	t_llu			tt_sleep;
 	pthread_mutex_t	*forks;
-	int				*fork_state;
+	int				*forks_state;
 	pthread_mutex_t	*output;
 	pthread_mutex_t	*mutex_running;
 	int				max_eat;
 	int				times_eaten;
 	int				last_meal;
+	struct timeval	eat;
+	struct timeval	sleep;
 	struct timeval	*time;
 }	t_philo;
 

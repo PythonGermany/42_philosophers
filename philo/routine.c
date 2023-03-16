@@ -41,9 +41,9 @@ static int	change_fork_state(t_philo *data, int fork_id, int new_state)
 	int	state;
 
 	pthread_mutex_lock(&data->forks[fork_id]);
-	if (!data->fork_state[fork_id] || data->fork_state[fork_id] == data->id)
-		data->fork_state[fork_id] = (new_state != 0) * data->id;
-	state = data->fork_state[fork_id];
+	if (!data->forks_state[fork_id] || data->forks_state[fork_id] == data->id)
+		data->forks_state[fork_id] = (new_state != 0) * data->id;
+	state = data->forks_state[fork_id];
 	pthread_mutex_unlock(&data->forks[fork_id]);
 	return (state == data->id);
 }
@@ -65,8 +65,6 @@ static void	take_forks(t_philo *data)
 void	*philo_routine(void *arg)
 {
 	t_philo			*data;
-	struct timeval	start_eat;
-	struct timeval	start_sleep;
 
 	data = (t_philo *)arg;
 	while (!check_vitals(data))
@@ -74,18 +72,18 @@ void	*philo_routine(void *arg)
 	while (check_vitals(data))
 	{
 		take_forks(data);
-		gettimeofday(&start_eat, NULL);
+		gettimeofday(&data->eat, NULL);
 		print_message(data, "is eating", 0);
-		while (check_vitals(data) && time_diff(&start_eat) < data->tt_eat)
+		while (check_vitals(data) && time_diff(&data->eat) < data->tt_eat)
 			usleep(10);
 		change_fork_state(data, data->id - 1, 0);
 		if (data->philo_count > 1)
 			change_fork_state(data, data->id % data->philo_count, 0);
-		gettimeofday(&start_sleep, NULL);
+		gettimeofday(&data->sleep, NULL);
 		if (data->max_eat && ++data->times_eaten >= data->max_eat)
 			break ;
 		print_message(data, "is sleeping", 0);
-		while (check_vitals(data) && time_diff(&start_sleep) < data->tt_sleep)
+		while (check_vitals(data) && time_diff(&data->sleep) < data->tt_sleep)
 			usleep(10);
 		print_message(data, "is thinking", 0);
 	}

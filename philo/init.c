@@ -50,7 +50,7 @@ static void	init_philo(t_data *data, char **arg, int i)
 	data->philo_data[i].tt_eat = ft_atoi(arg[2]) * 1000;
 	data->philo_data[i].tt_sleep = ft_atoi(arg[3]) * 1000;
 	data->philo_data[i].forks = data->forks;
-	data->philo_data[i].fork_state = data->forks_state;
+	data->philo_data[i].forks_state = data->forks_state;
 	if (arg[4] != NULL)
 		data->philo_data[i].max_eat = ft_atoi(arg[4]);
 	else
