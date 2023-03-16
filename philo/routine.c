@@ -17,14 +17,7 @@ static void	print_message(t_philo *data, char *msg, int disable_output)
 	pthread_mutex_lock(data->output);
 	pthread_mutex_lock(data->mutex_running);
 	if (*data->running != 0)
-	{
 		printf("%llu %d %s\n", time_diff(data->time) / 1000, data->id, msg);
-		for (int i = 0; i < data->philo_count; i++)
-		{
-			printf("%i ", data->fork_state[i]);
-		}
-		printf("\n");
-	}
 	if (disable_output != 0)
 		*data->running = 0;
 	pthread_mutex_unlock(data->mutex_running);
