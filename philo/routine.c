@@ -38,7 +38,7 @@ static int	check_vitals(t_philo *data)
 
 static int	change_fork_state(t_philo *data, int fork_id, int new_state)
 {
-	int state;
+	int	state;
 
 	pthread_mutex_lock(&data->forks[fork_id]);
 	if (!data->fork_state[fork_id] || data->fork_state[fork_id] == data->id)
